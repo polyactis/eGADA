@@ -3,6 +3,8 @@
 # eGADA
 eGADA is an enhanced version of GADA, https://github.com/rpique/GADA.
 
+Essentially, it is a fast segmentation algorithm based on the Sparse Bayesian Learning (or Relevance Vector Machine) technique. It can be applied to array intensity data, sequencing coverage data, or any sequential data that displays characteristics of a step-wise function.
+
 - Use a Red-Black tree to expedite the final backward elimination step.
 - Code in C++, not C.
 - Use Boost libraries extensively.
