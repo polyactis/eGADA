@@ -10,7 +10,8 @@ Essentially, it is a fast segmentation algorithm based on the Sparse Bayesian Le
 - Use Boost libraries extensively.
 - More friendly help and commandline-argument processing.
 - More friendly input and output formats.
-- A dynamic library eGADA.so (packaged via Boost.Python) that can be imported by Python2.
+- A dynamic library eGADA.so (packaged via Boost.Python) that can be imported in Python.
+- Some other minor changes/bugfixed in the original code.
 
 # Prerequisites to build eGADA
 
