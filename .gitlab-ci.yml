@@ -11,15 +11,28 @@ stages:
   - test_run
 
 
-GADA:
+eGADA:
   stage: test_run
   script:
-    - echo "Compiling GADA and test-run its Python module ... "
+    - echo "Compiling eGADA and test its C++ binary ... "
     - pwd
     - cd src && make
-    - ./testGADA.py -i ../data/input.txt -o ./output.tsv
+    - ./eGADA -i ../data/input.txt -o ./output_CPP.tsv
   artifacts:
     name: "${CI_BUILD_NAME}_${CI_BUILD_REF_NAME}_${CI_BUILD_ID}"
     expire_in: 3 mos
     paths:
-    - src/output.tsv
+    - src/output_CPP.tsv
+
+pyGADA:
+  stage: test_run
+  script:
+    - echo "Compiling eGADA and test-run its Python module ... "
+    - pwd
+    - cd src && make
+    - ./testGADA.py -i ../data/input.txt -o ./output_py.tsv
+  artifacts:
+    name: "${CI_BUILD_NAME}_${CI_BUILD_REF_NAME}_${CI_BUILD_ID}"
+    expire_in: 3 mos
+    paths:
+    - src/output_py.tsv
