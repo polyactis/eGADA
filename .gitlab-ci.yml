@@ -1,0 +1,25 @@
+before_script:
+  - echo "before script"
+  # let users can modify its own files.
+  # git object files are 444 (read-only for everyone.)
+  - chmod u+w -R .git/
+
+after_script:
+  - echo "after script"
+
+stages:
+  - test_run
+
+
+GADA:
+  stage: test_run
+  script:
+    - echo "Compiling GADA and test-run its Python module ... "
+    - pwd
+    - cd src && make
+    - ./testGADA.py -i ../data/input.txt -o ./output.tsv
+  artifacts:
+    name: "${CI_BUILD_NAME}_${CI_BUILD_REF_NAME}_${CI_BUILD_ID}"
+    expire_in: 3 mos
+    paths:
+    - src/output.tsv
