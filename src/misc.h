@@ -38,8 +38,8 @@ using namespace std;
 
 #ifndef ExitProgramMacro
 
-#define ExitProgramMacro(a) { \
-printf("Error: "); printf(a); \
+#define ExitProgramMacro(msg) { \
+printf("Error: "); printf("%s", msg); \
 printf("Exiting from line %i in file %s\n",__LINE__,__FILE__); \
 printf("\nCausing Segmentation Fault to exit ungracefully\n"); \
        int* junk = NULL; (*junk)++;\
@@ -108,7 +108,7 @@ inline void * SafeMalloc(size_t size) {
     char errorMessagePartOne [200];
     char errorMessagePartTwo [200];
     sprintf(errorMessagePartOne,
-	    "Exiting From SafeMalloc because malloc of size %i failed.\n", size);
+	    "Exiting From SafeMalloc because malloc of size %lu failed.\n", size);
    // sprintf(errorMessagePartTwo,
     //    "Calling sbrk(0) gives %x\n",(int)(sbrk(0)));
     strcat(errorMessagePartOne, errorMessagePartTwo);
@@ -138,7 +138,7 @@ inline void * SafeCalloc(int numberOfElements , size_t size) {
     { /* assignment intentional in above line */
     return(result);
   } else {
-    printf("memory overflow: calloc failed in SafeCalloc(%i,%i).",
+    printf("memory overflow: calloc failed in SafeCalloc(%i,%lu).",
 	   numberOfElements, size);
     //printf("sbrk(0) gives %x\n",(int)(sbrk(0)));
     printf("  Exiting Program.\n");
