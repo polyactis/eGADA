@@ -602,6 +602,7 @@ void eGADA::commandlineRun()
         baseGADA.CollapseAmpTtest();
         if (debug)
         {
+            
             std::cerr << " SelectClassifySegments done.\n";
         }
     }
