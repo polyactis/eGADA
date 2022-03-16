@@ -1,5 +1,5 @@
 /*=================================================================
- * BaseGenomeBreaks.h
+ * BaseGADA.h
  *
  *=================================================================*/
 /*
@@ -61,7 +61,7 @@ class BreakPointKey{
 	 * 	content is similar to BreakPoint but different ordering function.
 	 */
 	// for output
-	friend ostream& operator<<(ostream& out, BreakPointKey& bpKey){
+	friend ostream& operator<<(ostream& out, const BreakPointKey& bpKey){
 		/*
 		 * something wrong here, it can't be streamed to an ostream
 		 */
@@ -174,7 +174,7 @@ public:
 
 class BreakPoint{
 	// for output
-	friend ostream& operator<<(ostream& out, BreakPoint& breakPoint){
+	friend ostream& operator<<(ostream& out, const BreakPoint& breakPoint){
 		out << boost::format("position=%1%, tscore=%2%, weight=%3%, length=%4%, MinSegLen=%5%, totalLength=%6%")%
 				breakPoint.position % breakPoint.tscore % breakPoint.weight %
 				breakPoint.segmentLength % breakPoint.MinSegLen % breakPoint.totalLength;
