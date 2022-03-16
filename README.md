@@ -52,7 +52,7 @@ make
 
 # References
 
-1. Huang YS. eGADA: an enhanced Genomic Alteration Detection Algorithm. 2022 (in preparation)
-1. Tipping ME. [Sparse Bayesian learning and the relevance vector machine](https://www.jmlr.org/papers/volume1/tipping01a/tipping01a.pdf). Journal of machine learning research. 2001;1(Jun):211-44.
-1. Pique-Regi R, Tsau ES, Ortega A, Seeger R, Asgharzadeh S. [Wavelet footprints and sparse bayesian learning for DNA copy number change analysis](https://ieeexplore.ieee.org/abstract/document/4217089). In 2007 IEEE International Conference on Acoustics, Speech and Signal Processing-ICASSP'07 2007 Apr 15 (Vol. 1, pp. I-353). IEEE.
-1. Pique-Regi R, Monso-Varona J, Ortega A, Seeger RC, Triche TJ, Asgharzadeh S. [Sparse representation and Bayesian detection of genome copy number alterations from microarray data](https://academic.oup.com/bioinformatics/article/24/3/309/253648). Bioinformatics. 2008 Feb 1;24(3):309-18.
+1. Huang YS. eGADA: Enhancing the Genomic Alteration Detection Algorithm. 2022 (in preparation)
+2. Tipping ME. [Sparse Bayesian learning and the relevance vector machine](https://www.jmlr.org/papers/volume1/tipping01a/tipping01a.pdf). Journal of machine learning research. 2001;1(Jun):211-44.
+3. Pique-Regi R, Tsau ES, Ortega A, Seeger R, Asgharzadeh S. [Wavelet footprints and sparse bayesian learning for DNA copy number change analysis](https://ieeexplore.ieee.org/abstract/document/4217089). In 2007 IEEE International Conference on Acoustics, Speech and Signal Processing-ICASSP'07 2007 Apr 15 (Vol. 1, pp. I-353). IEEE.
+4. Pique-Regi R, Monso-Varona J, Ortega A, Seeger RC, Triche TJ, Asgharzadeh S. [Sparse representation and Bayesian detection of genome copy number alterations from microarray data](https://academic.oup.com/bioinformatics/article/24/3/309/253648). Bioinformatics. 2008 Feb 1;24(3):309-18.
