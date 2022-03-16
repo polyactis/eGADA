@@ -1,6 +1,6 @@
 
 BoostPythonTarget	= eGADA.so
-BoostPythonLib  = -lboost_python
+BoostPythonLib  = -lboost_python38
 # "-L ~/lib64/boost/lib" removed from BoostPythonLib. "-lboost_python-mt" changed to "-lboost_python"
 
 SharedLibFlags	= -shared -fPIC
@@ -17,11 +17,11 @@ CXXLDFLAGS	= $(BoostLib)
 all:	depend eGADA $(BoostPythonTarget)
 
 # for boost.python target(shared libraries)
-$(BoostPythonTarget):	%.so:	GADA_shared.o BaseGADA_shared.o
+$(BoostPythonTarget):	%.so:	eGADA_shared.o BaseGADA_shared.o
 	# -l... should be put in the last. If they are put in front of input files, they will be ignored!
 	$(CXXCOMPILER) $< BaseGADA_shared.o -DGADALib -o $@ $(SharedLibFlags) -lm $(BoostPythonLib)
 
-GADA_shared.o:	eGADA.cc
+eGADA_shared.o:	eGADA.cc
 	$(CXXCOMPILER) $< -c -o $@ $(CXXFLAGS) -DGADALib $(IncludeDirs) $(SharedLibFlags)
 BaseGADA_shared.o:	BaseGADA.cc
 	$(CXXCOMPILER) $< -c -o $@ $(CXXFLAGS) -DGADALib $(IncludeDirs) $(SharedLibFlags)
