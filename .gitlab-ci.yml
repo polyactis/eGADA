@@ -36,3 +36,16 @@ pyGADA:
     expire_in: 3 mos
     paths:
     - src/output_py.tsv
+
+docker_pyGADA:
+  stage: test_run
+  script:
+    - echo "Run the program inside the docker... "
+    - pwd
+    - docker pull docker.yfish.x/egada:latest
+    - docker run -t docker.yfish.x/egada:latest /opt/eGADA/testGADA.py -i ./data/input.txt -o ./output_docker_py.tsv
+  artifacts:
+    name: "${CI_BUILD_NAME}_${CI_BUILD_REF_NAME}_${CI_BUILD_ID}"
+    expire_in: 3 mos
+    paths:
+    - output_docker_py.tsv
