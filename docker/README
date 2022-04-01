@@ -1,0 +1,12 @@
+20220331
+
+Running "make" in this folder creates the base docker image, polyactis/egada:u20base, with all dependent packages but without the egada binary.
+
+Running "make" in the subfolder "updateDocker" adds the binaries to the docker image, thus completing the image.
+
+
+# first to generate the base image: polyactis/egada:u20base
+$ make
+
+# then to add binaries to polyactis/egada
+$ cd updateDocker; make
