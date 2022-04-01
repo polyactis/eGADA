@@ -1,6 +1,6 @@
 # Add Accucopy to the base image
 
-tag_name = v1
+tag_name = v1.0.1
 
 all:
 	date
