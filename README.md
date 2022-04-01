@@ -4,6 +4,7 @@
 - [To run](#to-run)
   - [The C++ binary](#the-c-binary)
   - [Calling the dynamic library from Python](#calling-the-dynamic-library-from-python)
+  - [Docker image](#docker-image)
 - [References](#references)
 
 # eGADA
@@ -55,7 +56,11 @@ make
 ```bash
 ./src/testGADA.py -i ./data/input.txt -o ./data/output_a0.5T4M5.tsv
 ```
+## Docker image
 
+- https://hub.docker.com/repository/docker/polyactis/egada
+- Binary and testGADA.py are deposited in /opt/eGADA.
+- Run ```docker pull polyactis/egada``` or ```singularity pull docker://polyactis/egada```.
 # References
 
 1. Huang YS. eGADA: Enhancing the Genomic Alteration Detection Algorithm. 2022 (in preparation)
