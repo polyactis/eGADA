@@ -32,3 +32,5 @@
 *.exe
 *.out
 *.app
+docker/updateDocker/binary/testGADA.py
+docker/updateDocker/binary/eGADA
