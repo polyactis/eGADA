@@ -55,11 +55,13 @@ class testGADA(object):
         df.to_csv(self.output_path, sep='\t', index=False)
 
 if __name__ == '__main__':
-    #test the C++ module
+    print("### Testing the C++ eGADA.so module ...\n", flush=True)
+    # Pass 1 to eGADA() to enable debugging output.
+    # Passing 0 or no passing, i.e. eGADA.eGADA() turns off debugging.
     ins = eGADA.eGADA(1)
     test_vector = [1,1,1,1,0.99,0.99,1,1,0.1,0.1,0.1,0.15]
     segment_ls = ins.run(test_vector, 0.2, 4, 2)
-    print('Segmentation for {0}:\n {1}'.format(test_vector, segment_ls))
+    print(f'\n ### Segmentation results for {test_vector} is:\n \t {segment_ls}.\n', flush=True)
     del ins
 
     from argparse import ArgumentParser
