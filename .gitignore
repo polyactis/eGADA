@@ -1,4 +1,6 @@
 .vscode
+src/eGADA
+data/*txt
 # Prerequisites
 *.d
 *.depend
