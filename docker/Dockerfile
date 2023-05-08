@@ -14,7 +14,7 @@ RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 RUN apt-get install -y apt-utils iputils-ping less lynx \
     libboost-program-options1.71.0 libboost-iostreams1.71.0 libboost-python1.71.0\
-    man python3-minimal telnet tmux vim
+    man python3-minimal python3-pandas telnet tmux vim
 # install pyflow, use absolute path. Default path is /.
 # do not split it in two commands (cd and then run this. as every command starts from /)
 

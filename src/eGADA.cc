@@ -163,7 +163,7 @@ void eGADA::initParameters()
                   // by the mean of the differences
     // I would recommend to be estimated on all the chromosomes and as a trimmed
     // mean.
-    MinSegLen = 0;  // Lenght in number of probes for a CNA segment to be called
+    MinSegLen = 0;  // Length in number of probes for a CNA segment to be called
                     // significan.
     SelectClassifySegments =
         0;  // Classify segment into altered state (1), otherwise 0
@@ -617,12 +617,12 @@ void eGADA::commandlineRun()
     }
     else if (SelectClassifySegments == 1)
     {
-        outputStream << boost::format("Start\tStop\tLenght\tAmpl\tState\n");
+        outputStream << boost::format("Start\tStop\tLength\tAmpl\tState\n");
         for (i = 0; i < baseGADA.K + 1; i++)
         {
             outputStream << baseGADA.Iext[i] + 1 << "\t" << baseGADA.Iext[i + 1]
                          << "\t" << baseGADA.SegLen[i] << "\t"
-                         << baseGADA.SegAmp[i];
+                         << baseGADA.SegAmp[i] << "\t";
             if (baseGADA.SegState[i] > baseGADA.BaseAmp)
                 outputStream << "G";
             else if (baseGADA.SegState[i] < baseGADA.BaseAmp)
