@@ -1,6 +1,6 @@
 - [eGADA](#egada)
 - [Prerequisites to build eGADA](#prerequisites-to-build-egada)
-- [To build the eGADA using g++](#to-build-the-egada-using-g)
+- [Build the eGADA using g++](#build-the-egada-using-g)
 - [To run](#to-run)
   - [The C++ binary](#the-c-binary)
   - [Calling the dynamic library from Python](#calling-the-dynamic-library-from-python)
