@@ -1,10 +1,11 @@
 /*
- * 2013.09.21 Yu Huang, copyright. a red-black tree template, c++
- * based on http://web.mit.edu/~emin/www.old/source_code/cpp_trees/index.html (check c++/trees folder in test repository)
+ * 2013.09.21 Yu S. Huang polyactis@gmail.com.
+ * Copyright. A Red-Black Tree C++ template code.
+ * 
+ * Use template to revamp http://web.mit.edu/~emin/www.old/source_code/cpp_trees/index.html.
  *
- * asoliman's version https://code.google.com/p/rbtrees/ is too buggy.
- * so try luck on this version.
- *
+ * asoliman's version https://code.google.com/p/rbtrees/ is quite buggy and gave up.
+ * 
  * Examples
  *
 typedef set<BreakPoint*> rbNodeDataType;
@@ -33,7 +34,8 @@ typedef RedBlackTreeNode<BreakPointKey, rbNodeDataType > rbNodeType;
 #include<iostream>
 #include <boost/format.hpp>
 #include "misc.h"
-#include <cstring>      //for strcat
+//for strcat
+#include <cstring>
 using namespace std;
 
 //  CONVENTIONS:
@@ -50,33 +52,21 @@ using namespace std;
 //                variable name is gNewtonsConstant.
 
 #ifndef MAX_INT
-#define MAX_INT INT_MAX // some architechturs define INT_MAX not MAX_INT
+// some CPU architechtures define INT_MAX not MAX_INT
+#define MAX_INT INT_MAX
 #endif
 const int MIN_INT = -MAX_INT;
-
-// The RedBlackEntry class is an Abstract Base Class.  This means that no
-// instance of the RedBlackEntry class can exist.  Only classes which
-// inherit from the RedBlackEntry class can exist.  Furthermore any class
-// which inherits from the RedBlackEntry class must define the member
-// function GetKey().  The print() member function does not have to
-// be defined because a default definition exists.
-//
-// The GetKey() function should return an integer key for that entry.
-// The key for an entry should never change otherwise bad things might occur.
 
 #define COLOR(color) (color == 1) ? "red" : "black"
 
 static const short BLACK_ = 0;
-static const short RED_ = 1; //2013.09.13 color is reversed compared with RBTreeC.h
+//2013.09.13 color is reversed compared with RBTreeC.h (another RB implementation)
+static const short RED_ = 1;
 static const short LEFT_ = 100;
 static const short RIGHT_ = 200;
 
 template<typename keyType, typename dataType>
 class RedBlackTreeNode {
-    //friend class RedBlackTree;
-//protected:
-    //RedBlackEntry * storedEntry;
-
 public:
     keyType key;
     dataType* dataPtr;
@@ -94,58 +84,69 @@ public:
         this->right = NULL;
         this->color = RED_;
     }
+
+    /*
+    * key_, data_ are references, have to be initialized in the away above.
+    */
     RedBlackTreeNode(RedBlackTreeNode<keyType, dataType>* _parent, keyType _key,
             dataType* _dataPtr) :
             parent(_parent), key(_key), dataPtr(_dataPtr) {
-        /*
-         * key_, data_ are references, have to be initialized in the away above.
-         */
+        
         this->left = NULL;
         this->right = NULL;
         this->color = RED_;
     }
-    //RedBlackTreeNode(RedBlackEntry *);
-    //RedBlackEntry * GetEntry() const;
-    ~RedBlackTreeNode() {
 
+    ~RedBlackTreeNode() {
+        // no memory to release?
     }
+
     RedBlackTreeNode<keyType, dataType> *getParent() {
         return this->parent;
     }
+
     RedBlackTreeNode<keyType, dataType> *getLeft() {
         return this->left;
     }
+
     RedBlackTreeNode<keyType, dataType> *getRight() {
         return this->right;
     }
+    
     dataType* getDataPtr() {
         return this->dataPtr;
     }
+    
     keyType getKey() {
         return this->key;
     }
+    
     short getColor() {
         return this->color;
     }
+    
     void setLeft(RedBlackTreeNode<keyType, dataType> *nodePtr) {
         this->left = nodePtr;
     }
+    
     void setRight(RedBlackTreeNode<keyType, dataType> *nodePtr) {
         this->right = nodePtr;
     }
+    
     void setParent(RedBlackTreeNode<keyType, dataType> *nodePtr) {
         this->parent = nodePtr;
     }
+    
     void setDataPtr(dataType* dataPtr) {
         this->dataPtr = dataPtr;
     }
+    
     void setKey(keyType key) {
         this->key = key;
     }
 
     void setColor(short color) {
         this->color = color;
-
     }
 
 };
@@ -251,6 +252,7 @@ protected:
         Assert(!nil->color,"nil not red in RedBlackTree::leftRotate");
 #endif
     }
+
     void rightRotate(RedBlackTreeNode<keyType, dataType>* y) {
 
         /***********************************************************************/
@@ -305,6 +307,7 @@ protected:
         Assert(!nil->color,"nil not red in RedBlackTree::rightRotate");
 #endif
     }
+
     void insertFix_(RedBlackTreeNode<keyType, dataType> *z) {
         /*  This function should only be called by RedBlackTree::Insert */
 
@@ -361,8 +364,10 @@ protected:
             TreePrintHelper(x->right);
         }
     }
+    
     void FixUpMaxHigh(RedBlackTreeNode<keyType, dataType> *) {
     }
+
     void deleteFixup_(RedBlackTreeNode<keyType, dataType> *x) {
         /***********************************************************************/
         /*  FUNCTION:  deleteFixup_ */
@@ -442,6 +447,7 @@ protected:
         Assert(!nil->color,"nil not black in RedBlackTree::deleteFixup_");
 #endif
     }
+
 public:
     /*  A sentinel is used for root and for nil.  These sentinels are */
     /*  created when RedBlackTreeCreate is called.  root->left should always */
@@ -451,6 +457,7 @@ public:
     /*  that the root and nil nodes do not require special cases in the code */
     RedBlackTreeNode<keyType, dataType> * root;
     RedBlackTreeNode<keyType, dataType> * nil;
+    
     RedBlackTree() {
         nil = new RedBlackTreeNode<keyType, dataType>();
         nil->left = nil->right = nil->parent = nil;
@@ -465,7 +472,10 @@ public:
         //root->storedEntry = NULL;
         _noOfNodes = 0;
     }
+    
     ~RedBlackTree() {
+        // did not release any memory because it's used as a Python module?
+
         /*
          RedBlackTreeNode<keyType, dataType> * x = root->left;
          TemplateStack<RedBlackTreeNode<keyType, dataType> *> stuffToFree;
@@ -495,21 +505,22 @@ public:
          delete root;
          */
     }
+    
     void print() {
         TreePrintHelper(root->left);
     }
+    
     int deleteNode(RedBlackTreeNode<keyType, dataType>* z) {
         /*  FUNCTION:  deleteNode */
         /**/
         /*    INPUTS:  tree is the tree to delete node z from */
         /**/
-        /*    OUTPUT:  returns the RedBlackEntry stored at deleted node */
+        /*    OUTPUT:  return 0 if success */
         /**/
         /*    EFFECT:  Deletes z from tree and but don't call destructor */
         /**/
         /*    Modifies Input:  z */
         /**/
-        /*    The algorithm from this function is from _Introduction_To_Algorithms_ */
         /***********************************************************************/
 
         RedBlackTreeNode<keyType, dataType>* y;
@@ -566,6 +577,7 @@ public:
         _noOfNodes--;
         return 0;
     }
+
     RedBlackTreeNode<keyType, dataType> * insertNode(keyType key,
             dataType* dataPtr) {
 
@@ -650,6 +662,7 @@ public:
         _noOfNodes++;
         return (newNode);
     }
+
     RedBlackTreeNode<keyType, dataType> * getPredecessor_(
             RedBlackTreeNode<keyType, dataType> * x) const {
 
@@ -683,6 +696,7 @@ public:
             return (y);
         }
     }
+
     RedBlackTreeNode<keyType, dataType> * getSuccessor_(
             RedBlackTreeNode<keyType, dataType> * x) const {
         /***********************************************************************/
@@ -716,6 +730,7 @@ public:
             return (y);
         }
     }
+
     RedBlackTreeNode<keyType, dataType> *queryTreeRecur_(
             RedBlackTreeNode<keyType, dataType> *nodePtr, keyType key) {
         if (nodePtr == nil) {
@@ -729,25 +744,33 @@ public:
             return nodePtr;
         }
     }
+
     RedBlackTreeNode<keyType, dataType> * queryTree(keyType key) {
         return queryTreeRecur_(root->left, key);
     }
+    
+    /*
+    * To obtain the size of the tree.
+    * It is a very expensive operation, use noOfNodes() to check.
+    */
     long size() {
-        /*
-         * 2013.09.23 very expensive operation, use noOfNodes() to check.
-         */
+        
         return count_(root->left, 0);
     }
+
     long noOfNodes(){
         return _noOfNodes;
     }
+    
     long maxDepth() {
         return maxDepthRecur_(root->left);
     }
+    
     RedBlackTreeNode<keyType, dataType> *getMinimum() {
         return getMinimum_(root->left);
 
     }
+    
     RedBlackTreeNode<keyType, dataType> *getMaximum() {
         return getMaximum_(root->left);
 
@@ -759,6 +782,7 @@ public:
         }
         return count_(nodePtr->getLeft(), count_(nodePtr->getRight(), ++num));
     }
+    
     long maxDepthRecur_(RedBlackTreeNode<keyType, dataType> *nodePtr) {
         if (nodePtr == nil) {
             return 0;
@@ -771,6 +795,7 @@ public:
             return rightDepth + 1;
         }
     }
+    
     RedBlackTreeNode<keyType, dataType> *getMinimum_(
             RedBlackTreeNode<keyType, dataType> *nodePtr) {
         if (nodePtr == nil) {
@@ -781,6 +806,7 @@ public:
         }
         return nodePtr;
     }
+    
     RedBlackTreeNode<keyType, dataType> *getMaximum_(
             RedBlackTreeNode<keyType, dataType> *nodePtr) {
         if (nodePtr == nil) {
@@ -791,6 +817,7 @@ public:
         }
         return nodePtr;
     }
+    
     RedBlackTreeNode<keyType, dataType> *grandparent_(
             RedBlackTreeNode<keyType, dataType> *nodePtr) {
         if ((nodePtr != nil) && (nodePtr->getParent() != nil)) {
@@ -799,6 +826,7 @@ public:
             return nil;
         }
     }
+    
     RedBlackTreeNode<keyType, dataType> *uncle_(
             RedBlackTreeNode<keyType, dataType> *nodePtr) {
         RedBlackTreeNode<keyType, dataType> *myGPNode = grandparent_(nodePtr);
@@ -811,6 +839,7 @@ public:
             return myGPNode->getLeft();
         }
     }
+    
     //TemplateStack<RedBlackTreeNode<keyType, dataType> *> * Enumerate(int low, int high) ;
     void checkAssumptions() const {
         VERIFY(nil->color == 0);
@@ -821,10 +850,10 @@ public:
         return isValidRedBlackTreeRecur_(root->left);
     }
 
+    /*
+    * 2013.09.22 check whether a node is a leaf (nil)
+    */
     bool isNULLNode(RedBlackTreeNode<keyType, dataType> * nodePtr){
-        /*
-         * 2013.09.22 check whether a node is a leaf (nil)
-         */
         return nodePtr==nil;
     }
 

@@ -1645,7 +1645,9 @@ long BaseGADA::BEwTscore(double *Wext, //IO Breakpoint weights extended notation
     M = Iext[K + 1]; //Total length
 
     if (debug>0){
-        std::cerr << boost::format("BEwTscore(): BE starts K=%1% M=%2% T=%3% MinSegLen=%4% ... \n")% K % M % T % MinSegLen;
+        std::cerr << boost::format(
+            "BEwTscore(): BE starts K=%1% M=%2% T=%3% MinSegLen=%4% ... \n")% 
+            K % M % T % MinSegLen;
     }
     if (debug>0){
         std::cerr << boost::format("Adding %1% breakpoints into a red-black tree ... ")% K ;
@@ -1672,7 +1674,8 @@ long BaseGADA::BEwTscore(double *Wext, //IO Breakpoint weights extended notation
             segLength, MinSegLen, T, Iext[K+1]);
         BreakPointKey bpKey = bpPtr->getKey();
         //cerr<< *bpPtr << endl;
-        //cerr << boost::format("i=%1%, tree size=%2%, tree valid=%3%")% i % rbTree.size() % rbTree.isValidRedBlackTree() << endl;
+        //cerr << boost::format("i=%1%, tree size=%2%, tree valid=%3%")% i % 
+        //  rbTree.size() % rbTree.isValidRedBlackTree() << endl;
         if (i==1){
             bpPtr->setLeftBreakPoint(leftMostBreakPointPtr);
             leftMostBreakPointPtr->setRightBreakPoint(bpPtr);
@@ -1700,7 +1703,8 @@ long BaseGADA::BEwTscore(double *Wext, //IO Breakpoint weights extended notation
     }
     if (debug>0){
         //rbTree.printTree();
-        std::cerr << boost::format(" noOfNodesInTree=%1%, tree max depth =%2%, tree valid=%3%, maxBPSetSize=%4%.\n") %
+        std::cerr << boost::format(
+            " noOfNodesInTree=%1%, tree max depth =%2%, tree valid=%3%, maxBPSetSize=%4%.\n") %
                 rbTree.noOfNodes() % rbTree.maxDepth() % 
                 rbTree.isValidRedBlackTree() % maxBPSetSize;
     }
@@ -1727,8 +1731,10 @@ long BaseGADA::BEwTscore(double *Wext, //IO Breakpoint weights extended notation
         minBPKey = minNodePtr->getKey();
         setOfBPPtr = minNodePtr->getDataPtr();
         if (debug>0 && counter%reportIntervalDuringBE==0){
-            std::cerr << boost::format("BEwTscore(): iteration no=%1% T=%2% MinSegLen=%3%: "
-                "minimum break point key: %4% previousRoundMinScore=%5% previousToRemoveSegmentLength=%6% noOfSegments=%7% setOfBPPtr.size=%8% \n") %
+            std::cerr << boost::format(
+                "BEwTscore(): iteration no=%1% T=%2% MinSegLen=%3%: "
+                "minimum break point key: %4% previousRoundMinScore=%5% "
+                "previousToRemoveSegmentLength=%6% noOfSegments=%7% setOfBPPtr.size=%8% \n") %
                 counter % T % MinSegLen % minBPKey %  previousRoundMinScore % 
                 previousToRemoveSegmentLength %
                 rbTree.noOfNodes() % (*setOfBPPtr).size();
@@ -1743,8 +1749,10 @@ long BaseGADA::BEwTscore(double *Wext, //IO Breakpoint weights extended notation
             rightBreakPointPtr = minBPPtr->rightBreakPointPtr;
 
             if ((debug>0) && counter%reportIntervalDuringBE==0){
-                std::cerr << boost::format("\t BEwTscore(): iteration no=%1% T=%2% MinSegLen=%3%: "
-                    "break point to be removed: %4% previousRoundMinScore=%5% previousToRemoveSegmentLength=%6% noOfSegments=%7% \n") %
+                std::cerr << boost::format(
+                    "\t BEwTscore(): iteration no=%1% T=%2% MinSegLen=%3%: "
+                    "break point to be removed: %4% previousRoundMinScore=%5% "
+                    "previousToRemoveSegmentLength=%6% noOfSegments=%7% \n") %
                     counter % T % MinSegLen % *minBPPtr %  previousRoundMinScore % 
                     previousToRemoveSegmentLength % rbTree.noOfNodes();
             }
@@ -1812,8 +1820,11 @@ long BaseGADA::BEwTscore(double *Wext, //IO Breakpoint weights extended notation
 
     }
     if (debug>0){
-        std::cerr << boost::format("BEwTscore(): last iteration no=%1% T=%2% MinSegLen=%3%: minimum break point key: %4%,"
-            " previousRoundMinScore=%5% previousToRemoveSegmentLength=%6% tree size=%7%, noOfNodesInTree=%8% \n") %
+        std::cerr << boost::format(
+            "BEwTscore(): last iteration no=%1% T=%2% MinSegLen=%3%: "
+            "minimum break point key: %4%, "
+            "previousRoundMinScore=%5% previousToRemoveSegmentLength=%6% "
+            "tree size=%7%, noOfNodesInTree=%8% \n") %
                 counter % T % MinSegLen % minBPKey % previousRoundMinScore %
                 previousToRemoveSegmentLength % rbTree.size() % rbTree.noOfNodes();
         cerr << boost::format("\t currentMinScore=%1%, toRemoveSegmentLength=%2% \n")%
@@ -1835,9 +1846,11 @@ long BaseGADA::BEwTscore(double *Wext, //IO Breakpoint weights extended notation
     }
     breakPointVector.push_back(*rightMostBreakPointPtr);	//add the right most.
     if (debug){
-        cerr << boost::format("breakPointVector size=%1%, noOfNodesInTree=%2%, tree size=%3%, tree valid=%4%")%
-                breakPointVector.size() % rbTree.noOfNodes() % rbTree.size() % 
-                rbTree.isValidRedBlackTree() << endl;
+        cerr << boost::format(
+            "breakPointVector size=%1%, noOfNodesInTree=%2%, tree size=%3%, "
+            "tree valid=%4%")%
+            breakPointVector.size() % rbTree.noOfNodes() % rbTree.size() % 
+            rbTree.isValidRedBlackTree() << endl;
     }
     free(leftMostBreakPointPtr);
     free(rightMostBreakPointPtr);
@@ -1877,12 +1890,14 @@ long BaseGADA::RemoveBreakpoint(double *Wext, long *Iext, double *tscore, long K
 
     //Change coefficients
     if (indexOfSegmentToRemove > 1){
-        Wext[indexOfSegmentToRemove - 1] = Wext[indexOfSegmentToRemove - 1]
-                + sqrt((M - iL) / (M - iC) * iL / iC) * (iR - iC) / (iR - iL) * Wext[indexOfSegmentToRemove];
+        Wext[indexOfSegmentToRemove - 1] = Wext[indexOfSegmentToRemove - 1] + 
+            sqrt((M - iL) / (M - iC) * iL / iC) * 
+            (iR - iC) / (iR - iL) * Wext[indexOfSegmentToRemove];
     }
     if (indexOfSegmentToRemove < K){
-        Wext[indexOfSegmentToRemove + 1] = Wext[indexOfSegmentToRemove + 1]
-                + sqrt((M - iR) / (M - iC) * iR / iC) * (iC - iL) / (iR - iL) * Wext[indexOfSegmentToRemove];
+        Wext[indexOfSegmentToRemove + 1] = Wext[indexOfSegmentToRemove + 1] + 
+            sqrt((M - iR) / (M - iC) * iR / iC) * 
+            (iC - iL) / (iR - iL) * Wext[indexOfSegmentToRemove];
     }
     Wext[indexOfSegmentToRemove] = 0; //
     //Shorten list
@@ -1900,16 +1915,17 @@ long BaseGADA::RemoveBreakpoint(double *Wext, long *Iext, double *tscore, long K
     return K - 1;
 }
 
-void BaseGADA::ComputeTScores(const double *Wext, const long *Iext, double *Scores,
-        long K, long start, long end) {
+void BaseGADA::ComputeTScores(const double *Wext, const long *Iext, 
+    double *Scores, long K, long start, long end) {
     long j;
     double h0, M;
 
     M = (double) Iext[K + 1];
 
     for (j = start; j <= end; j++) {
-        h0 = (double) (M - Iext[j]) * (double) Iext[j] / M * (double) (Iext[j + 1] - Iext[j - 1])
-                / (double) (Iext[j + 1] - Iext[j]) / (double) (Iext[j] - Iext[j - 1]);
+        h0 = (double) (M - Iext[j]) * (double) Iext[j] / M * 
+            (double) (Iext[j + 1] - Iext[j - 1]) / 
+            (double) (Iext[j + 1] - Iext[j]) / (double) (Iext[j] - Iext[j - 1]);
         Scores[j] = fabs(Wext[j]) / sqrt(h0);
     }
 }
