@@ -71,8 +71,6 @@ public:
     keyType key;
     dataType* dataPtr;
     unsigned short color;
-    //int key;
-    //int red; /* if red=0 then the node is black */
     RedBlackTreeNode<keyType, dataType> * left;
     RedBlackTreeNode<keyType, dataType> * right;
     RedBlackTreeNode<keyType, dataType> * parent;
@@ -82,11 +80,12 @@ public:
         dataPtr = NULL;
         this->left = NULL;
         this->right = NULL;
+        /* if red=0 then the node is black */
         this->color = RED_;
     }
 
     /*
-    * key_, data_ are references, have to be initialized in the away above.
+    * key_, data_ are references and have have to be initialized in the way above.
     */
     RedBlackTreeNode(RedBlackTreeNode<keyType, dataType>* _parent, keyType _key,
             dataType* _dataPtr) :

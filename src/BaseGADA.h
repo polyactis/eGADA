@@ -42,11 +42,14 @@
 #include <vector>
 #include <map>	//for hash_map
 #include <set>	//for set
-#include <functional>	// to customize hash
-#include <boost/functional/hash.hpp>	// yh: to customize boost::hash
+// to customize hash
+#include <functional>
+// yh: to customize boost::hash
+#include <boost/functional/hash.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
-#include "RedBlackTree.h"	// red-black tree to store segment breakpoint, score, etc.
+// red-black tree to store segment breakpoint, score, etc.
+#include "RedBlackTree.h"
 
 
 #ifndef GADABIN
@@ -58,29 +61,33 @@ using namespace std;
 class BreakPointKey{
     /*
      * class defines the key of a breakpoint in a red-black tree.
-     * 	content is similar to BreakPoint but different ordering function.
      */
-    // for output
+
+    // for output formatting
     friend ostream& operator<<(ostream& out, const BreakPointKey& bpKey){
         /*
          * something wrong here, it can't be streamed to an ostream
          */
-        out << boost::format("position=%1%, tscore=%2%, weight=%3%, length=%4%, MinSegLen=%5%, totalLength=%6%")%
+        out << boost::format("position=%1%, tscore=%2%, weight=%3%, length=%4%, "
+            "MinSegLen=%5%, totalLength=%6%")%
                 bpKey.position % bpKey.tscore % bpKey.weight %
                 bpKey.segmentLength % bpKey.MinSegLen % bpKey.totalLength;
         return out;
     }
-    // define comparison operator for the RBTree, how to order them
-    // For all break points below MinSegLen, order by tscore
-    // For all break points above MinSegLen, order by tscore
-    // for break points crossing MinSegLen, order by segmentLength
+    /* The comparison operator for RBTree nodes determines how to order them.
+     * If at least one t-stat/t-score of two breakpoints is below the threshold,
+     *   order them based on t-score.
+     * Otherwise, order them by segment length, which is defined as the length
+     *   of the shorter flanking fragment.
+    */
     friend bool operator<(const BreakPointKey& a, const BreakPointKey& b){
         /*
-         * make sure no duplicate (or close keys, for floating values) keys exist in red-black trees.
+         * make sure no duplicate (or close keys, for floating values) keys 
+         *      exist in red-black trees.
          */
-        //return a.tscore < b.tscore;
 
-        if(a.tscore<a.minTScore && b.tscore<b.minTScore){	//both below minTScore, then order them by score
+        //both below minTScore, then order them by t-score
+        if(a.tscore<a.minTScore && b.tscore<b.minTScore){
             if (a.tscore==b.tscore){
                 return a.segmentLength<b.segmentLength;
             }
@@ -88,7 +95,9 @@ class BreakPointKey{
                 return a.tscore<b.tscore;
             }
         }
-        else if ((a.tscore<a.minTScore && b.tscore>=b.minTScore) || (a.tscore>=a.minTScore && b.tscore<b.minTScore)){	//one below, one above
+        //one below, one above
+        else if ((a.tscore<a.minTScore && b.tscore>=b.minTScore) || 
+            (a.tscore>=a.minTScore && b.tscore<b.minTScore)){
             if (a.tscore==b.tscore){
                 return a.segmentLength<b.segmentLength;
             }
@@ -97,7 +106,8 @@ class BreakPointKey{
                 return a.tscore<b.tscore;
             }
         }
-        else{	//both above minTScore (or one equal, one above or both equal), then order them by segment length, unless they are identical
+        //both above minTScore or one equal one above or both equal), 
+        else{
             if (a.segmentLength==b.segmentLength){
                 return a.tscore<b.tscore;
             }
@@ -110,10 +120,12 @@ class BreakPointKey{
 
     friend bool operator>(const BreakPointKey& a, const BreakPointKey& b){
         /*
-         * make sure no duplicate (or close keys, for floating values) keys exist in red-black trees.
+         * make sure no duplicate (or close keys, for floating values) keys 
+         *  exist in red-black trees.
          */
-        //return a.tscore > b.tscore;
-        if(a.tscore<a.minTScore && b.tscore<b.minTScore){	//both below minTScore, then order them by score, unless identical
+
+        //both below minTScore, then order them by score
+        if(a.tscore<a.minTScore && b.tscore<b.minTScore){
             if (a.tscore==b.tscore){
                 return a.segmentLength>b.segmentLength;
             }
@@ -121,7 +133,9 @@ class BreakPointKey{
                 return a.tscore>b.tscore;
             }
         }
-        else if ((a.tscore<a.minTScore && b.tscore>=b.minTScore) || (a.tscore>=a.minTScore && b.tscore<b.minTScore)){	//one below, one above
+        //one below, one above
+        else if ((a.tscore<a.minTScore && b.tscore>=b.minTScore) || 
+            (a.tscore>=a.minTScore && b.tscore<b.minTScore)){
             if (a.tscore==b.tscore){
                 return a.segmentLength>b.segmentLength;
             }
@@ -130,7 +144,8 @@ class BreakPointKey{
                 return a.tscore>b.tscore;
             }
         }
-        else{	//both above minTScore (or one equal, one above or both equal), then order them by segment length, unless they are identical
+        //both above minTScore or one equal one above or both equal), 
+        else{
             if (a.segmentLength==b.segmentLength){
                 return a.tscore>b.tscore;
             }
@@ -148,11 +163,13 @@ public:
     long position;
     double weight;
     double tscore;
+    // length of the shorter flanking segment.
     long segmentLength;
     long MinSegLen;
     double minTScore;
     long totalLength;
     void* nodePtr;
+    
     BreakPointKey(){
         position=1;
         weight=0;
@@ -163,10 +180,15 @@ public:
         totalLength=0;
         nodePtr = NULL;
     }
-    BreakPointKey(long _position, double _weight, double _tscore, long _segmentLength, long _MinSegLen, double _minTScore, long _totalLength):
-        position(_position),weight(_weight), tscore(_tscore), segmentLength(_segmentLength), MinSegLen(_MinSegLen), minTScore(_minTScore), totalLength(_totalLength){
+    
+    BreakPointKey(long _position, double _weight, double _tscore, long _segmentLength, 
+        long _MinSegLen, double _minTScore, long _totalLength):
+        position(_position),weight(_weight), tscore(_tscore), 
+        segmentLength(_segmentLength), MinSegLen(_MinSegLen), 
+        minTScore(_minTScore), totalLength(_totalLength){
         nodePtr = NULL;
     };
+
     ~BreakPointKey(){
     }
 };
@@ -175,7 +197,8 @@ public:
 class BreakPoint{
     // for output
     friend ostream& operator<<(ostream& out, const BreakPoint& breakPoint){
-        out << boost::format("position=%1%, tscore=%2%, weight=%3%, length=%4%, MinSegLen=%5%, totalLength=%6%")%
+        out << boost::format("position=%1%, tscore=%2%, weight=%3%, length=%4%, "
+            "MinSegLen=%5%, totalLength=%6%")%
                 breakPoint.position % breakPoint.tscore % breakPoint.weight %
                 breakPoint.segmentLength % breakPoint.MinSegLen % breakPoint.totalLength;
         return out;
@@ -215,7 +238,9 @@ public:
     }
     BreakPoint(long _position, double _weight, double _tscore, long _segmentLength, 
             long _MinSegLen, double _minTScore, long _totalLength):
-        position(_position),weight(_weight), tscore(_tscore), segmentLength(_segmentLength), MinSegLen(_MinSegLen), minTScore(_minTScore), totalLength(_totalLength){
+        position(_position),weight(_weight), tscore(_tscore), 
+        segmentLength(_segmentLength), MinSegLen(_MinSegLen), minTScore(_minTScore), 
+        totalLength(_totalLength){
         leftBreakPointPtr=NULL;
         rightBreakPointPtr=NULL;
         nodePtr = NULL;
@@ -254,7 +279,8 @@ public:
     }
     
     BreakPointKey getKey(){
-        BreakPointKey bpKey = BreakPointKey(position, weight, tscore, segmentLength, MinSegLen, minTScore, totalLength);
+        BreakPointKey bpKey = BreakPointKey(position, weight, tscore, 
+            segmentLength, MinSegLen, minTScore, totalLength);
         return bpKey;
     }
     
@@ -279,38 +305,42 @@ public:
             leftLeftBreakPointPtr = leftBreakPointPtr->leftBreakPointPtr;
             rightRightBreakPointPtr = rightBreakPointPtr->rightBreakPointPtr;
             //update the weights first
-            if (leftLeftBreakPointPtr!=NULL){	//leftBreakPointPtr is NOT the left most.
+            
+            //leftBreakPointPtr is NOT the left most.
+            if (leftLeftBreakPointPtr!=NULL){
                 leftBreakPointPtr->weight = leftBreakPointPtr->weight
-                        + sqrt((M - iL) / (M - iC) * iL / iC) * (iR - iC) / (iR - iL) *weight;
+                    + sqrt((M - iL) / (M - iC) * iL / iC) * (iR - iC) / (iR - iL) *weight;
             }
-            if (rightRightBreakPointPtr!=NULL){	//rightBreakPointPtr is NOT the right most break point
+            //rightBreakPointPtr is NOT the right most break point
+            if (rightRightBreakPointPtr!=NULL){
                 rightBreakPointPtr->weight = rightBreakPointPtr->weight
-                        + sqrt((M - iR) / (M - iC) * iR / iC) * (iC - iL) / (iR - iL) * weight;
+                    + sqrt((M - iR) / (M - iC) * iR / iC) * (iC - iL) / (iR - iL) * weight;
             }
             //update the tscoe and segmentLength, which needs the updated weights
             if (leftLeftBreakPointPtr!=NULL){
-                h0 = (double) (M - leftBreakPointPtr->position) * (double) leftBreakPointPtr->position / M * (double) (rightBreakPointPtr->position - leftLeftBreakPointPtr->position)
-                            / (double) (rightBreakPointPtr->position - leftBreakPointPtr->position) / (double) (leftBreakPointPtr->position - leftLeftBreakPointPtr->position);
+                h0 = (double) (M - leftBreakPointPtr->position) * 
+                    (double) leftBreakPointPtr->position / M * 
+                    (double) (rightBreakPointPtr->position - leftLeftBreakPointPtr->position) / 
+                    (double) (rightBreakPointPtr->position - leftBreakPointPtr->position) / 
+                    (double) (leftBreakPointPtr->position - leftLeftBreakPointPtr->position);
+                
                 leftBreakPointPtr->tscore = fabs(leftBreakPointPtr->weight) / sqrt(h0);
                 leftBreakPointPtr->segmentLength = min(leftBreakPointPtr->position - 
                         leftLeftBreakPointPtr->position ,
                     rightBreakPointPtr->position-leftBreakPointPtr->position);
             }
             if (rightRightBreakPointPtr!=NULL){
-                h0 = (double) (M - rightBreakPointPtr->position) * (double) rightBreakPointPtr->position / M * (double) (rightRightBreakPointPtr->position - leftBreakPointPtr->position)
-                            / (double) (rightRightBreakPointPtr->position - rightBreakPointPtr->position) / (double) (rightBreakPointPtr->position - leftBreakPointPtr->position);
+                h0 = (double) (M - rightBreakPointPtr->position) * 
+                    (double) rightBreakPointPtr->position / M * 
+                    (double) (rightRightBreakPointPtr->position - leftBreakPointPtr->position) / 
+                    (double) (rightRightBreakPointPtr->position - rightBreakPointPtr->position) / 
+                    (double) (rightBreakPointPtr->position - leftBreakPointPtr->position);
+                
                 rightBreakPointPtr->tscore = fabs(rightBreakPointPtr->weight) / sqrt(h0);
-                rightBreakPointPtr->segmentLength= min(rightRightBreakPointPtr->position - 
-                        rightBreakPointPtr->position,
+                rightBreakPointPtr->segmentLength= min(
+                    rightRightBreakPointPtr->position - rightBreakPointPtr->position,
                     rightBreakPointPtr->position-leftBreakPointPtr->position);
             }
-            /*
-            for (j = start; j <= end; j++) {
-                h0 = (double) (M - Iext[j]) * (double) Iext[j] / M * (double) (Iext[j + 1] - Iext[j - 1])
-                        / (double) (Iext[j + 1] - Iext[j]) / (double) (Iext[j] - Iext[j - 1]);
-                Scores[j] = fabs(Wext[j]) / sqrt(h0);
-            }
-            */
         }
         //update the left & right of the left & right
         if (leftBreakPointPtr!=NULL){
@@ -324,9 +354,9 @@ public:
         //delete rightBreakPointPtr;
         //delete nodePtr;
     }
-    //define methods to compute /update score/length/weight/position based on neighboring breakpoints
+    //define methods to compute /update score/length/weight/position 
+    //  based on neighboring breakpoints
 };
-
 
 
 namespace std {
@@ -364,13 +394,16 @@ public:
     double T; //IP  Threshold to prune
     long MinSegLen;	//minimum segment length
 
-    long debug; //verbosity... set equal to 1 to see messages of SBLandBE(). 0 to not see them
+    //verbosity... set equal to 1 to see messages of SBLandBE(). 0 to not see them
+    long debug;
     int report;
-    long M;	// total/max length
+    // total/max length
+    long M;
 
     long i;
     long K;
-    double *tn;	//would store normalized array of input data (raw-mean)
+    //would store normalized array of input data (raw-mean)
+    double *tn;
     double *inputDataArray;
     long *SegLen;
     double *SegAmp;
@@ -384,24 +417,31 @@ public:
     //double T2=5.0; //Segment collapse to base Non-Alteration level threshold
     double BaseAmp; //Base-level
     double a; //SBL hyperprior parameter
-    double sigma2; //Variance observed, if negative value, it will be estimated by the mean of the differences
-                    // I would recommend to be estimated on all the chromosomes and as a trimmed mean.
+    //Variance observed, if negative value, it will be estimated by the mean of the differences
+    // I would recommend to be estimated on all the chromosomes and as a trimmed mean.
+    double sigma2;
+    
     long SelectClassifySegments; //Classify segment into altered state (1), otherwise 0
     long SelectEstimateBaseAmp; //Estimate Neutral hybridization amplitude.
 
     long maxNoOfIterations;	//=50000, //10000 is enough usually
-    double convergenceDelta;	//1E-10 or 1E-8 seems to work well for this parameter. -- => ++ conv time
-            //1E8 better than 1E10 seems to work well for this parameter. -- => -- conv time
+    //1E-10 or 1E-8 seems to work well for this parameter. -- => ++ conv time
+    //1E8 better than 1E10 seems to work well for this parameter. -- => -- conv time
+    double convergenceDelta;
     double convergenceMaxAlpha;	// 1E8 Maximum number of iterations to reach convergence...
     double convergenceB;	// a number related to convergence = 1E-20
     double ymean;	//mean of inputDataArray
-    int reportIntervalDuringBE;	// how often to report progress during backward elimination, default is 100K
+    // how often to report progress during backward elimination, default is 100K
+    int reportIntervalDuringBE;
 
     BaseGADA(double* _inputDataArray, long _M, double _sigma2, double _BaseAmp, 
         double _a, double _T, long _MinSegLen,
         long _debug , double _convergenceDelta,
-        long _maxNoOfIterations, double _convergenceMaxAlpha, double _convergenceB, int _reportIntervalDuringBE):
-        inputDataArray(_inputDataArray), M(_M),  sigma2(_sigma2), BaseAmp(_BaseAmp), a(_a), T(_T), MinSegLen(_MinSegLen),
+        long _maxNoOfIterations, double _convergenceMaxAlpha, double _convergenceB, 
+        int _reportIntervalDuringBE):
+        
+        inputDataArray(_inputDataArray), M(_M),  sigma2(_sigma2), BaseAmp(_BaseAmp), 
+        a(_a), T(_T), MinSegLen(_MinSegLen),
         debug(_debug),
         convergenceDelta(_convergenceDelta),
         maxNoOfIterations (_maxNoOfIterations), convergenceMaxAlpha(_convergenceMaxAlpha),
@@ -410,7 +450,8 @@ public:
     }
 
     ~BaseGADA(){
-#ifndef GADALib //this causes eGADA::run() of eGADA.so to crash right before returning segments to python
+#ifndef GADALib 
+//this causes eGADA::run() of eGADA.so to crash right before returning segments to python
         free(SegLen);
         free(SegAmp);
         free(SegState);

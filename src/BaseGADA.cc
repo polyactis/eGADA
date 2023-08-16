@@ -1832,7 +1832,9 @@ long BaseGADA::BEwTscore(double *Wext, //IO Breakpoint weights extended notation
     }
 
     // convert data back to old data structures
-    K = rbTree.noOfNodes();	//update the number of break points
+    
+    //update the number of break points
+    K = rbTree.noOfNodes();
     vector<BreakPoint> breakPointVector;
     breakPointVector.push_back(*leftMostBreakPointPtr);	//add this first
     while (rbTree.noOfNodes()>0){
