@@ -21,7 +21,7 @@ def test_segmentation():
     ins = eGADA.eGADA(1)
     test_vector = [1,1,1,1,0.99,0.99,1,1,0.1,0.1,0.1,0.15]
     segment_ls = ins.run(test_vector, 0.2, 4, 2)
-    print(f'\n ### Segmenting {test_vector} output is:\n \t {segment_ls}.\n', 
+    print(f'\nSegmenting {test_vector} output is:\n \t {segment_ls}.\n', 
             flush=True)
     # check the start, stop, length of the first segment.
     assert segment_ls[0][:3]==[1, 8, 8]
