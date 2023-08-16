@@ -13,10 +13,32 @@ Description:
 import sys
 import eGADA
 
-class testGADA(object):
+
+def test_segmentation():
+    print("### Testing the C++ eGADA.so module ...\n", flush=True)
+    # Pass 1 to eGADA() to enable debugging output.
+    # Passing 0 or no passing, i.e. eGADA.eGADA() turns off debugging.
+    ins = eGADA.eGADA(1)
+    test_vector = [1,1,1,1,0.99,0.99,1,1,0.1,0.1,0.1,0.15]
+    segment_ls = ins.run(test_vector, 0.2, 4, 2)
+    print(f'\n ### Segmenting {test_vector} output is:\n \t {segment_ls}.\n', 
+            flush=True)
+    # check the start, stop, length of the first segment.
+    assert segment_ls[0][:3]==[1, 8, 8]
+    # check the average amplitude of the first segment.
+    assert segment_ls[0][3]==0.9975
+
+    assert segment_ls[1][:3]==[9, 12, 4]
+    assert segment_ls[1][3]==0.11249999999999993
+    del ins
+
+
+class call_GADA(object):
     __doc__ = __doc__
+
     def __init__(self, input_path=None, output_path=None, alpha=0.5, tBackElim=4, \
         minSegLen=5, debug=False):
+        # unittest.TestCase.__init__(self,x)
         """
         input_path: Each line in the input file is just one float number for one probe.
         output_path: Path to the output file.
@@ -31,7 +53,8 @@ class testGADA(object):
         self.tBackElim = tBackElim
         self.minSegLen = minSegLen
         self.debug = debug
-    
+
+
     def run(self):
         """
         """
@@ -55,14 +78,7 @@ class testGADA(object):
         df.to_csv(self.output_path, sep='\t', index=False)
 
 if __name__ == '__main__':
-    print("### Testing the C++ eGADA.so module ...\n", flush=True)
-    # Pass 1 to eGADA() to enable debugging output.
-    # Passing 0 or no passing, i.e. eGADA.eGADA() turns off debugging.
-    ins = eGADA.eGADA(1)
-    test_vector = [1,1,1,1,0.99,0.99,1,1,0.1,0.1,0.1,0.15]
-    segment_ls = ins.run(test_vector, 0.2, 4, 2)
-    print(f'\n ### Segmentation results for {test_vector} is:\n \t {segment_ls}.\n', flush=True)
-    del ins
+    test_segmentation()
 
     from argparse import ArgumentParser
     ap = ArgumentParser()
@@ -82,7 +98,7 @@ if __name__ == '__main__':
     ap.add_argument("--debug", action='store_true',
             help='Toggle debug mode. Default: %(default)s.')
     args = ap.parse_args()
-    instance = testGADA(args.input_path, args.output_path, \
+    instance = call_GADA(args.input_path, args.output_path, \
         alpha=args.alpha, tBackElim=args.tBackElim, \
         minSegLen=args.minSegLen, debug=args.debug)
     instance.run()
