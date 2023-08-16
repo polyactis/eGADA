@@ -182,11 +182,10 @@ void eGADA::initParameters()
 #ifndef GADABIN  // 2009-11-21 boost python module code included under if macro
                  // GADABIN (eGADA standalone) is not defined.
 
-void eGADA::readInIntensity(boost::python::list intensity_list)
 /*
- * Fix a bug in moving intensity from intensity_list to tn: the last
- * intensity was forgotten.
+ * Read intensity from a python list.
  */
+void eGADA::readInIntensity(boost::python::list intensity_list)
 {
 #if defined(DEBUG)
     cerr << boost::format("# Start reading ... \n");
