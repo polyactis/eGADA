@@ -53,8 +53,7 @@ class call_GADA(object):
         self.tBackElim = tBackElim
         self.minSegLen = minSegLen
         self.debug = debug
-
-
+    
     def run(self):
         """
         """
