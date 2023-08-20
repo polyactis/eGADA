@@ -45,11 +45,102 @@ make
 ## The C++ binary
 
 ```bash
-./src/eGADA -a 0.8 -T 5 -M 3 -s -0.2 -b 0.0 -c < ../test/input.txt > ../test/output2.txt  
+./src/eGADA -i ../data/input.txt -o ../data/output2.txt -a 0.8 -T 5 -M 3 -s -0.2 -b 0.0 -c
 ```
-- The input is a single column plain text file.
-- The output is a several column plain file with several segments.
-- Type ```eGADA -h``` for more help.
+- The input is a single-column plain text file.
+- The output is a 4-column tsv file:
+  - Start is the starting index (1-based) of the segment.
+  - Stop is the ending index (1-based and inclusive) of the segment.
+  - Length is the number of data points/bins/probes included in the segment.
+  - Ampl (Amplitude) is the average amplitude/coverage of the segment.
+
+```
+# eGADA: enhanced Genome Alteration Detection Algorithm
+# Authors: Yu Huang polyactis@gmail.com, Roger Pique-Regi piquereg@usc.edu
+# Parameters: a=0.2,T=5,MinSegLen=0,sigma2=0.207949,BaseAmp=0, convergenceDelta=1e-08, maxNoOfIterations=50000, convergenceMaxAlpha=1e+08, convergenceB=1e-20.
+# Reading M=80000 probes in input file
+# Overall mean 0.00135799
+# Sigma^2=0.207949
+# Convergence: delta=9.88473e-09 after 924 EM iterations.
+# Found 1915 breakpoints after SBL
+# Kept 442 breakpoints after BE
+Start   Stop    Length  Ampl
+1       25      25      0.881578
+26      75      50      -1.08218
+76      125     50      1.04644
+126     175     50      -0.973855
+176     226     51      0.912763
+227     275     49      -0.954001
+276     325     50      0.963878
+326     375     50      -1.16553
+376     427     52      0.948964
+...
+```
+
+- Type ```eGADA``` or ```eGADA -h ``` for more help.
+
+```bash
+yh@fusilier:~/src/eGADA/src$ ./eGADA
+program name is ./eGADA.
+Usage:
+./eGADA -i INPUTFNAME -o OUTPUTFNAME [OPTIONS]
+
+  -h [ --help ]                         produce help message
+  -T [ --TBackElim ] arg (=5)            is the backward elimination critical 
+                                        value for a breakpoint. i.e. minimum 
+                                        (mean1-mean2)/stddev difference between
+                                        two adjacent segments.
+  -a [ --aAlpha ] arg (=0.5)            is the SBL hyper prior parameter for a 
+                                        breakpoint. It is the  shape parameter 
+                                        of the Gamma distribution. Higher 
+                                        (lower) value means less (more) 
+                                        breakpoints expected a priori.
+  -M [ --MinSegLen ] arg (=0)           is the minimum size in number of probes
+                                        for a segment to be deemed significant.
+  --BaseAmp arg (=0)                    Mean amplitude associated to the 
+                                        Neutral state. If not provided, and c 
+                                        option is used, then it is estimated as
+                                        the median value of all probes 
+                                        hybridization values after running the 
+                                        algorithm. We recomend to estimate this
+                                        on chromosomes that are known to have a
+                                        Neutral state on most areas. In some 
+                                        cases this value may be known if we 
+                                        have been applied some normalization, 
+                                        preprocessing or using another sample 
+                                        as ref.
+  -s [ --sigma2 ] arg (=-1)             Variance observed, if negative value, 
+                                        it will be estimated by the mean of the
+                                        differences. I would recommend to be 
+                                        estimated on all the chromosomes and as
+                                        a trimmed mean.
+  -c [ --SelectClassifySegments ] arg (=0)
+                                        Classify segment into altered state 
+                                        (1), otherwise 0
+  --SelectEstimateBaseAmp arg (=1)      toggle this to estimate BaseAmp from 
+                                        data, rather than user-supplied.
+  --convergenceDelta arg (=1e-08)       a delta number controlling convergence
+  --maxNoOfIterations arg (=50000)      maximum number of iterations for EM 
+                                        convergence algorithm to run before 
+                                        being stopped
+  --convergenceMaxAlpha arg (=100000000)
+                                        one convergence related number, not 
+                                        sure what it does.
+  --convergenceB arg (=9.9999999999999995e-21)
+                                        one convergence related number, not 
+                                        sure what it does
+  -b [ --debug ]                        toggle debug mode
+  -r [ --report ]                       toggle report mode
+  --reportIntervalDuringBE arg (=100000)
+                                        how often to report the break point to 
+                                        be removed during backward elimination
+  -i [ --inputFname ] arg               input filename, gzipped or not. could 
+                                        be specified as option or positional 
+                                        argument.It is a single column text 
+                                        file with no header.
+  -o [ --outputFname ] arg              output filename
+
+```
 
 ## Calling the dynamic library from Python
 
