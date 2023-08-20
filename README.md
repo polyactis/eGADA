@@ -45,7 +45,7 @@ make
 ## The C++ binary
 
 ```bash
-./src/eGADA -i ../data/input.txt -o ../data/output2.txt -a 0.8 -T 5 -M 3 -s -0.2 -b 0.0 -c
+./src/eGADA -i ../data/input.txt -o ../data/output2.txt
 ```
 - The input is a single-column plain text file.
 - The output is a 4-column tsv file:
