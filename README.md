@@ -9,7 +9,7 @@
 
 # eGADA
 
-eGADA: enhanced Genomic Alteration Detection Algorithm
+eGADA (enhanced Genomic Alteration Detection Algorithm) is an enhanced version of GADA (Pique-Regi 2007, Pique-Regi 2008).
 
 It is a fast segmentation algorithm utilizing the Sparse Bayesian Learning (or Relevance Vector Machine) technique from Tipping 2001. It can be applied to array intensity data, sequencing coverage data, or any sequential data that displays characteristics of step-wise functions.
 
