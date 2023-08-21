@@ -846,8 +846,9 @@ long BaseGADA::SBL(double *y, //I -- 1D array with the input signal
 //        }
         if (delta < convergenceDelta) {
             if (debug > 0) {
-                std::cerr<< boost::format("# \t SBL: Converged after %1% iterations, delta=%4%, within tolerance %2%, M=%3% \n") %
-                        n % convergenceDelta % K % delta;
+                std::cerr<< boost::format("# \t SBL: Converged after %1% iterations, "
+                    "delta=%4%, within tolerance %2%, M=%3% \n") %
+                    n % convergenceDelta % K % delta;
             }
             break;
         }
@@ -863,8 +864,8 @@ long BaseGADA::SBL(double *y, //I -- 1D array with the input signal
             I[0] = -1;
             sigw[0] = -1;
             alpha[0] = -1;
-            std::cerr << boost::format("#      SBL: After %1% iterations, No disconinuities found M=%2% \n") %
-                    n % K;
+            std::cerr << boost::format("#      SBL: After %1% iterations, "
+                "No disconinuities found M=%2% \n") % n % K;
             break;
         }
         if (sizesel < K) {
@@ -926,8 +927,9 @@ long BaseGADA::SBL(double *y, //I -- 1D array with the input signal
 
     if (debug > 0) {
         if (i >= maxNoOfIterations) {
-            std::cerr << boost::format("# \t SBL: Converged??? Stopped after %1% iterations with delta=%2%, M=%3%, convergenceDelta=%4% \n") %
-                    n % delta % K % convergenceDelta;
+            std::cerr << boost::format("# \t SBL: Converged??? Stopped after "
+                "%1% iterations with delta=%2%, M=%3%, convergenceDelta=%4% \n") %
+                n % delta % K % convergenceDelta;
         }
     }
 
@@ -977,7 +979,7 @@ long BaseGADA::SBL(double *y, //I -- 1D array with the input signal
     return n;
 }
 
-/**************************************************************************************************************************/
+/*******************************************************************************/
 
 /* Deppending on the Tau value this function will behave in two different
  ways. First, if Tau is lower than zero (-1 will be our agreement) the
@@ -1019,22 +1021,23 @@ long BaseGADA::BEthresh(double *Scores, long Nscores, double *wr, long *indsel,
         //search for the minimum score>0
         imin = 0;
         vmin = Scores[indsel[imin]];
-        for (i = 1; i < NumRem; i++) //search of the lowest Score (less important)
-                {
+        //search of the lowest Score (less important)
+        for (i = 1; i < NumRem; i++) {
             aux = indsel[i];
             if (Scores[aux] < vmin) {
                 imin = i;
                 vmin = Scores[aux];
             }
         }
-        inrem = indsel[imin]; // Returns the absolute position of the disc to remove.
+        // Returns the absolute position of the disc to remove.
+        inrem = indsel[imin];
 
 #ifdef _DEBUG_
         myPrintf("NEXT COMPONENT OUT:\n\nimin=%ld\nvmin=%g\n\n",imin,vmin);
 #endif
 
-        if ((vmin > Tau) && (Tau >= 0)) //if the lowest score is greater than TAU, we don't do anything
-                {
+        //if the lowest score is greater than TAU, we don't do anything
+        if ((vmin > Tau) && (Tau >= 0)) {
 
 #ifdef _DEBUG_
             myPrintf("Threshold is not enough --> THERE IS NO MORE TO EXTRACT\n\n");
@@ -1079,8 +1082,8 @@ long BaseGADA::BEthresh(double *Scores, long Nscores, double *wr, long *indsel,
          indsel like in the matlab version??? Mantain indsel
          Update left weight if it exist, and right weight if it exist.*/
 
-        if (imin == 0) //if I should remove the leftmost w
-                {
+        //if should remove the leftmost w
+        if (imin == 0) {
 #ifdef _DEBUG_
             myPrintf("LEFTMOST REMOVING:\n\n",imin,vmin);
 #endif
@@ -1088,12 +1091,11 @@ long BaseGADA::BEthresh(double *Scores, long Nscores, double *wr, long *indsel,
             iR = indsel[imin + 1]; //indsel[1]
             iL = 0;
             //recompute weights
-            wr[iR] = wr[iR]
-                    + (double) sqrt(
-                            (double) (M - iR - 1) / (M - iC - 1)
-                                    * (double) (iR + 1) / (iC + 1))
-                            * (double) (iC + 1 - iL) / (iR + 1 - iL)
-                            * (double) wr[iC];
+            wr[iR] = wr[iR] + 
+                (double) sqrt((double) (M - iR - 1) / (M - iC - 1) * 
+                    (double) (iR + 1) / (iC + 1)) * 
+                    (double) (iC + 1 - iL) / (iR + 1 - iL) * 
+                    (double) wr[iC];
             wr[iC] = 0;
 
 #ifdef _DEBUG_
@@ -1104,16 +1106,16 @@ long BaseGADA::BEthresh(double *Scores, long Nscores, double *wr, long *indsel,
             //recompute Scores
             Scores[iC] = 0;
             iC = indsel[imin + 1];
-            if (imin + 1 == NumRem - 1) ////imin+1 or imin+2???????
-                    {
+             ////imin+1 or imin+2???????
+            if (imin + 1 == NumRem - 1) {
                 /*if there are just two discontinuitues so now we will
                  work with the rightmost w (or Score)*/
                 iR = M - 1;
             } else {
                 iR = indsel[imin + 2];
             }
-            h0R = (double) (M - iC - 1) * (iC + 1) / M * (iR + 1 - iL)
-                    / (iR - iC) / (iC + 1 - iL);
+            h0R = (double) (M - iC - 1) * (iC + 1) / M * (iR + 1 - iL) / 
+                (iR - iC) / (iC + 1 - iL);
             if (wr[iC] >= 0) {
                 Scores[iC] = (double) (wr[iC] / sqrt(h0R));
             } else {
@@ -1132,11 +1134,10 @@ long BaseGADA::BEthresh(double *Scores, long Nscores, double *wr, long *indsel,
             iL = indsel[imin - 1];
             iR = M;
             //recompute weights
-            wr[iL] = wr[iL]
-                    + sqrt(
-                            (double) (M - iL - 1) / (M - iC - 1)
-                                    * (double) (iL + 1) / (iC + 1))
-                            * (double) (iR - iC - 1) / (iR - iL - 1) * wr[iC];
+            wr[iL] = wr[iL] + sqrt(
+                    (double) (M - iL - 1) / (M - iC - 1) * 
+                    (double) (iL + 1) / (iC + 1)) * 
+                    (double) (iR - iC - 1) / (iR - iL - 1) * wr[iC];
             wr[iC] = 0;
 #ifdef _DEBUG_
             myPrintf("wr[iL]=%g:\niL=%ld\n",wr[iL],iL);
@@ -1169,16 +1170,13 @@ long BaseGADA::BEthresh(double *Scores, long Nscores, double *wr, long *indsel,
             //removing left and right
             iR = indsel[imin + 1];
             iL = indsel[imin - 1];
-            wr[iR] = wr[iR]
-                    + sqrt(
-                            (double) (M - iR - 1) / (M - iC - 1)
-                                    * (double) (iR + 1) / (iC + 1))
-                            * (double) (iC - iL) / (iR - iL) * wr[iC];
-            wr[iL] = wr[iL]
-                    + sqrt(
-                            (double) (M - iL - 1) / (M - iC - 1)
-                                    * (double) (iL + 1) / (iC + 1))
-                            * (double) (iR - iC) / (iR - iL) * wr[iC];
+            wr[iR] = wr[iR] + sqrt(
+                    (double) (M - iR - 1) / (M - iC - 1) * 
+                    (double) (iR + 1) / (iC + 1)) * 
+                    (double) (iC - iL) / (iR - iL) * wr[iC];
+            wr[iL] = wr[iL] + sqrt((double) (M - iL - 1) / (M - iC - 1) * 
+                (double) (iL + 1) / (iC + 1)) * 
+                (double) (iR - iC) / (iR - iL) * wr[iC];
             wr[iC] = 0;
 #ifdef _DEBUG_
             myPrintf("M-iR-1=%ld:\nM-iC-1=%ld\niR+1/iC+1=%g:\nsqrt(all)=%g\n",M-iR-1,M-iC-1,(iR+1)/(iC+1),sqrt(((M-iR-1)/(M-iC-1))*((iR+1)/(iC+1))));
@@ -1189,14 +1187,14 @@ long BaseGADA::BEthresh(double *Scores, long Nscores, double *wr, long *indsel,
             Scores[iC] = 0;
             iL = indsel[imin - 1];
             iC = indsel[imin + 1];
-            if (imin + 1 == NumRem - 1) //iC is now the most right point
-                    {
+            //iC is now the most right point
+            if (imin + 1 == NumRem - 1) {
                 iR = M - 1;
             } else {
                 iR = indsel[imin + 2];
             }
-            h0R = (double) (M - iC - 1) * (iC + 1) / M * (iR - iL) / (iR - iC)
-                    / (iC - iL);
+            h0R = (double) (M - iC - 1) * (iC + 1) / M * (iR - iL) / 
+                (iR - iC) / (iC - iL);
             if (wr[iC] >= 0) {
                 Scores[iC] = (double) (wr[iC] / sqrt(h0R));
             } else {
@@ -1206,16 +1204,16 @@ long BaseGADA::BEthresh(double *Scores, long Nscores, double *wr, long *indsel,
             myPrintf("h0R=%g\niCfirst=%ld\nScores[iC]=%g\n\n",h0R,iC,Scores[iC]);
 #endif
             //scores
-            if (imin - 1 == 0) //iC is now the most left point
-                    {
+            //iC is now the most left point
+            if (imin - 1 == 0) {
                 iL = -1;
             } else {
                 iL = indsel[imin - 2];
             }
             iC = indsel[imin - 1];
             iR = indsel[imin + 1];
-            h0L = (double) (M - iC - 1) * (iC + 1) / M * (iR - iL) / (iR - iC)
-                    / (iC - iL);
+            h0L = (double) (M - iC - 1) * (iC + 1) / M * (iR - iL) / 
+                (iR - iC) / (iC - iL);
             if (wr[iC] >= 0) {
                 Scores[iC] = (double) (wr[iC] / sqrt(h0L));
             } else {
@@ -1252,12 +1250,13 @@ long BaseGADA::BEthresh(double *Scores, long Nscores, double *wr, long *indsel,
 
 /*************************************************************************/
 /*
- % CollapseAmp -- Collapses the amplitudes of the non significantly altered segments into a base level.
+ % CollapseAmp -- Collapses the amplitudes of non-significantly altered segments
+    into one base level.
  % [OutAmp,State]=CollapseAmp(SegAmp,SegLen,BaseAmp,sigma2,T);
+    Uses a T test to decide which segments to be collapsed to neutral
  */
 
-void BaseGADA::CollapseAmpTtest( //Uses a T test to decide which segments collapse to neutral
-        ) {
+void BaseGADA::CollapseAmpTtest() {
     long k;
 
 //	if(L==1)
@@ -1305,8 +1304,9 @@ void BaseGADA::CollapseAmpTtest( //Uses a T test to decide which segments collap
 }
 /*************************************************************************/
 /*
- % ClassifySegments -- Classifies/Collapses reconstructed segments into Altered/Gain/Loss
- % Gain uses positive numbers log2(3)-log2(2)
+ * ClassifySegments() -- 
+ * Classifies/Collapses reconstructed segments into Altered/Gain/Loss.
+ *  Gain uses positive numbers log2(3)-log2(2).
  */
 
 void BaseGADA::ClassifySegments(double *SegAmp, long *SegLen, double *SegState, long K,
@@ -1322,11 +1322,10 @@ void BaseGADA::ClassifySegments(double *SegAmp, long *SegLen, double *SegState, 
             SegState[k] = ploidy;
         } else if ((SegAmp[k] - BaseAmp) > 0) {
             for (c = ploidy; c < 100; c++) {
-                aux = (SegAmp[k] - BaseAmp - log2(c) + log2(ploidy))
-                        / sqrt(sigma2 / (double) SegLen[k]);
-                if ((SegAmp[k] - BaseAmp - log2(c) + log2(ploidy))
-                        / sqrt(sigma2 / (double) SegLen[k]) < T) {
-//					c=c-1;
+                aux = (SegAmp[k] - BaseAmp - log2(c) + log2(ploidy)) / 
+                    sqrt(sigma2 / (double) SegLen[k]);
+                if (aux < T) {
+                            // c=c-1;
                     break;
                 }
             }
@@ -1356,9 +1355,11 @@ void BaseGADA::ClassifySegments(double *SegAmp, long *SegLen, double *SegState, 
  }
  */
 
-double // Returns BaseAmp corresponding to the base level.
-BaseGADA::CompBaseAmpMedianMethod() {
-    //Computes the median recontruction level, as baseline level.
+/* 
+ * Returns BaseAmp corresponding to the base level.
+ * Computes the median recontruction level, as baseline level.
+ */
+double BaseGADA::CompBaseAmpMedianMethod() {
     long M, k, RunLen;
     BaseAmp = 0;
 
@@ -1371,7 +1372,8 @@ BaseGADA::CompBaseAmpMedianMethod() {
         D[k] = SegAmp[k];
         I[k] = SegLen[k];
     }
-    doubleBubbleSort(D, I, K + 1); //I need indexes of the sort
+    // need indexes of the sort
+    doubleBubbleSort(D, I, K + 1);
     SegAmp = D;
     SegLen = I;
 
@@ -1387,7 +1389,8 @@ BaseGADA::CompBaseAmpMedianMethod() {
     while (RunLen < M / 2)
         RunLen = RunLen + SegLen[k++];
 #ifdef _DebugCompBaseAmpMedianMethod_
-    myPrintf("_DebugCompBaseAmpMedianMethod_: k%ld RunLen=%ld SegAmp[k-1]%g SegAmp[k]%g\n",k,RunLen,SegAmp[k-1],SegAmp[k]);
+    myPrintf("_DebugCompBaseAmpMedianMethod_: k%ld RunLen=%ld SegAmp[k-1]%g SegAmp[k]%g\n",
+        k,RunLen,SegAmp[k-1],SegAmp[k]);
 #endif
 
     BaseAmp = SegAmp[k - 1];
@@ -1399,37 +1402,10 @@ BaseGADA::CompBaseAmpMedianMethod() {
     return BaseAmp;
 }
 
-/**************************************************************************************************************************/
-/*
-long SBLandBE( //Returns breakpoint list length.
-        double *y, long M, //length of the noisy signal tn
-        double *Psigma2, //If sigma2 < 0, compute sigma2
-        double a, // SBL parameter
-        double T, // Threshold to prune
-        long MinSegLen, //Minimum length of the segment.
-        long **pIext, //Returns breakpoint positions
-        double **pWext, //Returns breakpoint weights.
-        long debug //verbosity... set equal to 1 to see messages  0 to not see them
-        //long *pK
-        ){
-    // call the full-parameter SBLandBE
-    return SBLandBE(y, M, Psigma2, a, T, MinSegLen, pIext, pWext, debug, 1E-10, 50000, 1E8, 1E-20);
-}
-*/
-
-
+/******************************************************************************/
 long BaseGADA::SBLandBE() {
     long i;
     double myaux;
-    //double convergenceDelta, convergenceMaxAlpha, convergenceB;
-    //long maxNoOfIterations;
-    // SBL optimization parameters
-    //convergenceDelta = 1E-10; //1E-10 or 1E-8 seems to work well for this parameter. -- => ++ conv time
-    //convergenceMaxAlpha = 1E8; //1E8 better than 1E10 seems to work well for this parameter. -- => -- conv time
-    //maxNoOfIterations = 100000; //Maximum number of iterations to reach convergence...
-    //convergenceB = 1E-20; //
-
-    //sigma2 = *Psigma2;
 
     tn = inputDataArray;
     /*// no more copying of input data. to reduce memory usage.
@@ -1451,7 +1427,8 @@ long BaseGADA::SBLandBE() {
         sigma2 = sigma2 / (M - 1);
     }
     if (debug){
-        std::cerr << boost::format("sigma^2 (of difference of adjacent values) = %1% .\n")% sigma2;
+        std::cerr << boost::format("sigma^2 (of difference of adjacent values) "
+            "= %1% .\n")% sigma2;
     }
     //Mean removal
     ymean = 0;
@@ -1509,7 +1486,8 @@ long BaseGADA::SBLandBE() {
     Wext[0] = ymean;
 
     if (debug){
-        std::cerr << "_SBLBE_ Backward Elimination T=" << T << " MinSegLen=" << MinSegLen << std::endl;
+        std::cerr << "_SBLBE_ Backward Elimination T=" << T << " MinSegLen="
+            << MinSegLen << std::endl;
     }
     BEwTandMinLen(Wext, Iext, &K, sigma2, T, MinSegLen, debug);
 
@@ -1526,8 +1504,8 @@ long BaseGADA::SBLandBE() {
     return K;
 }
 
-/**************************************************************************************************************************/
-long BaseGADA::BEwTandMinLen( //Returns breakpoint list length. with T and MinSegLen
+/********************************************************************************/
+long BaseGADA::BEwTandMinLen(
         double *Wext, //IO Breakpoint weights extended notation...
         long *Iext, //IO Breakpoint positions in extended notation...
         long *pK, //IO Number breakpoint positions remaining.
@@ -1539,9 +1517,12 @@ long BaseGADA::BEwTandMinLen( //Returns breakpoint list length. with T and MinSe
     long i, K, imin, M;
 //    double myaux;
     double vmin;
-    double *tscore; //Statistical Scores,
+    //Statistical Scores,
+    double *tscore;
     //long *L; //Vector with the smallest of the two neighboring segments of each breakpoint.
-    long smallinside; //Variable that indicates that there are still small segments to eliminate.
+    
+    //Variable that indicates that there are still small segments to eliminate.
+    long smallinside;
 
     K = *pK; //Number of breakpoints
     M = Iext[K + 1]; //Total length
@@ -1565,16 +1546,24 @@ long BaseGADA::BEwTandMinLen( //Returns breakpoint list length. with T and MinSe
     ComputeTScores(Wext, Iext, tscore, K, 1, K);
 
     if (debug){
-        std::cerr << boost::format("_BEwTandMinLen_:K%1% w[0]=%2%,w[1]=%3%,w[2]=%4%,w[K-1]=%5%,w[K]=%6%\n") % K % Wext[0] % Wext[1] % Wext[2] % Wext[K-1] % Wext[K];
-        std::cerr << boost::format("_BEwTandMinLen_:K%1% t[0]=%2%,t[1]=%3%,t[2]=%4%,t[K-1]=%5%,t[K]=%6%\n") % K % tscore[0] % tscore[1] % tscore[2] % tscore[K-1] % tscore[K];
-        std::cerr << boost::format("_BEwTandMinLen_() Starting Backward Elimination: sigma2=%1% T=%2% MinSegLen %3% ... \n") % sigma2 % T % MinSegLen;
+        std::cerr << boost::format("_BEwTandMinLen_:K%1% w[0]=%2%,w[1]=%3%,"
+            "w[2]=%4%,w[K-1]=%5%,w[K]=%6%\n") % K % Wext[0] % Wext[1] % 
+            Wext[2] % Wext[K-1] % Wext[K];
+        std::cerr << boost::format("_BEwTandMinLen_:K%1% t[0]=%2%,t[1]=%3%,"
+            "t[2]=%4%,t[K-1]=%5%,t[K]=%6%\n") % K % tscore[0] % tscore[1] % 
+            tscore[2] % tscore[K-1] % tscore[K];
+        std::cerr << boost::format("_BEwTandMinLen_() Starting Backward Elimination: "
+            "sigma2=%1% T=%2% MinSegLen %3% ... \n") % sigma2 % T % MinSegLen;
     }
 
     BEwTscore(Wext, Iext, tscore, &K, T, MinSegLen, debug);
     if (debug){
-        std::cerr << boost::format("_BEwTandMinLen_:K%1% w[0]=%2%,w[1]=%3%,w[2]=%4%,w[K-1]=%5%,w[K]=%6%\n") % K % Wext[0] % Wext[1]%Wext[2]%Wext[K-1]%Wext[K];
-        std::cerr << boost::format("_BEwTandMinLen_:K%1% t[0]=%2%,t[1]=%3%,t[2]=%4%,t[K-1]=%5%,t[K]=%6%\n") % K%tscore[0]%tscore[1]%tscore[2]%tscore[K-1]%tscore[K];
-        //std::cerr << boost::format("_BEwTandMinLen_() Starting small segment prunning: ML=%1% smallinside=%2% ... \n") % MinSegLen % smallinside;
+        std::cerr << boost::format("_BEwTandMinLen_:K%1% w[0]=%2%,w[1]=%3%,"
+            "w[2]=%4%,w[K-1]=%5%,w[K]=%6%\n") % K % Wext[0] % Wext[1] % 
+            Wext[2]%Wext[K-1]%Wext[K];
+        std::cerr << boost::format("_BEwTandMinLen_:K%1% t[0]=%2%,t[1]=%3%,"
+            "t[2]=%4%,t[K-1]=%5%,t[K]=%6%\n") % K%tscore[0]%tscore[1]%
+            tscore[2]%tscore[K-1]%tscore[K];
     }
     /*
     while (smallinside) {
@@ -1595,7 +1584,8 @@ long BaseGADA::BEwTandMinLen( //Returns breakpoint list length. with T and MinSe
             smallinside = 0;
         else {
             if (debug>0){
-                std::cerr << boost::format("_BEwTandMinLen_ Removing %1% %2% %3% Numrem(old)=%4%") % Iext[imin] % imin % vmin % K;
+                std::cerr << boost::format("_BEwTandMinLen_ Removing %1% %2% %3% "
+                    "Numrem(old)=%4%") % Iext[imin] % imin % vmin % K;
             }
             tscore[imin] = -1;
             BEwTscore(Wext, Iext, tscore, &K, T, MinSegLen);
@@ -1609,7 +1599,8 @@ long BaseGADA::BEwTandMinLen( //Returns breakpoint list length. with T and MinSe
 
     if (debug>0){
         std::cerr << boost::format("T=%1% K=%2%\n") % T % K;
-        std::cerr << boost::format("_BEwTandMinLen_ Small segment prunning ends imin=%1% vmin=%2%\n") % imin % vmin;
+        std::cerr << boost::format("_BEwTandMinLen_ Small segment prunning "
+            "ends imin=%1% vmin=%2%\n") % imin % vmin;
     }
     */
 
@@ -1619,7 +1610,8 @@ long BaseGADA::BEwTandMinLen( //Returns breakpoint list length. with T and MinSe
     //     Wext[i]=w2[Iext[i]];
 
     if (debug>0){
-        std::cerr << boost::format("_BEwTandMinLen_() finished. number of breakpoints=%1% \n") % K;
+        std::cerr << boost::format("_BEwTandMinLen_() finished. "
+            "number of breakpoints=%1% \n") % K;
     }
     //Freeing memory
     myFree(tscore);
@@ -1833,10 +1825,11 @@ long BaseGADA::BEwTscore(double *Wext, //IO Breakpoint weights extended notation
 
     // convert data back to old data structures
     
-    //update the number of break points
+    // update the number of break points
     K = rbTree.noOfNodes();
     vector<BreakPoint> breakPointVector;
-    breakPointVector.push_back(*leftMostBreakPointPtr);	//add this first
+    // add this first breakpoint
+    breakPointVector.push_back(*leftMostBreakPointPtr);
     while (rbTree.noOfNodes()>0){
         minNodePtr = rbTree.getMinimum();
         setOfBPPtr = minNodePtr->getDataPtr();
@@ -1846,7 +1839,8 @@ long BaseGADA::BEwTscore(double *Wext, //IO Breakpoint weights extended notation
         }
         rbTree.deleteNode(minNodePtr);
     }
-    breakPointVector.push_back(*rightMostBreakPointPtr);	//add the right most.
+    //add the right most breakpoint.
+    breakPointVector.push_back(*rightMostBreakPointPtr);
     if (debug){
         cerr << boost::format(
             "breakPointVector size=%1%, noOfNodesInTree=%2%, tree size=%3%, "
@@ -1933,7 +1927,6 @@ void BaseGADA::ComputeTScores(const double *Wext, const long *Iext,
 }
 
 void BaseGADA::Project(double *y, long M, long *I, long L, double *xI, double *wI) {
-    // Intern variables declaration
     double aux_double = 0;
     double ymean = 0;
     long i = 0;
@@ -2075,8 +2068,7 @@ void BaseGADA::Project(double *y, long M, long *I, long L, double *xI, double *w
 
 }
 
-void BaseGADA::ProjectCoeff( //IextYobs2Wext
-        double *y, long M, long *Iext, long K, double *Wext) {
+void BaseGADA::ProjectCoeff(double *y, long M, long *Iext, long K, double *Wext) {
     // Intern variables declaration
     double ymean = 0;
     long i = 0;
@@ -2103,22 +2095,27 @@ void BaseGADA::ProjectCoeff( //IextYobs2Wext
         // BubbleSort(Iext,K+2);
 
         CompZ(y, z, M);
-//		myPrintf("\n CHECKING: ymean=%g,M=%ld,K=%ld\n",ymean,M,K);//
-//		myPrintf("\n z CHECKING: z[0]=%g,z[1]=%g,z[2]=%g,z[M-3]=%g,z[M-2]=%g\n",z[0],z[1],z[2],z[M-3],z[M-2]);
+//myPrintf("\n CHECKING: ymean=%g,M=%ld,K=%ld\n",ymean,M,K);//
+//myPrintf("\n z CHECKING: z[0]=%g,z[1]=%g,z[2]=%g,z[M-3]=%g,z[M-2]=%g\n",
+// z[0],z[1],z[2],z[M-3],z[M-2]);
 
         for (i = 1; i <= K; i++)
             z[i - 1] = z[Iext[i] - 1];
-//    	myPrintf("\n z CHECKING: z[0]=%g,z[1]=%g,z[2]=%g,z[K-2]=%g,z[K-1]=%g\n",z[0],z[1],z[2],z[K-2],z[K-1]);
+// myPrintf("\n z CHECKING: z[0]=%g,z[1]=%g,z[2]=%g,z[K-2]=%g,z[K-1]=%g\n",
+// z[0],z[1],z[2],z[K-2],z[K-1]);
 
         ComputeHsIext(Iext, K, h0, h1);
-        //myPrintf("\n h0 CHECKING: h0[0]=%g,h0[1]=%g,h0[2]=%g,h0[K-2]=%g,h0[K-1]=%g,h0[K]=%g\n",h0[0],h0[1],h0[2],h0[K-2],h0[K-1]);
-        //myPrintf("\n h1 CHECKING: h1[0]=%g,h1[1]=%g,h1[2]=%g,h1[K-2]=%g,h1[K-1]=%g\n",h1[0],h1[1],h1[2],h1[K-2]);
+        //myPrintf("\n h0 CHECKING: h0[0]=%g,h0[1]=%g,h0[2]=%g,h0[K-2]=%g,
+        //h0[K-1]=%g,h0[K]=%g\n",h0[0],h0[1],h0[2],h0[K-2],h0[K-1]);
+        //myPrintf("\n h1 CHECKING: h1[0]=%g,h1[1]=%g,h1[2]=%g,h1[K-2]=%g,h1[K-1]=%g\n",
+        //h1[0],h1[1],h1[2],h1[K-2]);
 
         for (i = 0; i < K + 1; i++)
             Wext[i] = 0.0;
 
         TriSymGaxpy(h0, h1, z, K, Wext + 1);
-        //   	myPrintf("\n w CHECKING: w[0]=%g,w[1]=%g,w[2]=%g,w[K-1]=%g,w[K]=%g\n",Wext[0],Wext[1],Wext[2],Wext[K-1],Wext[K]);
+        //myPrintf("\n w CHECKING: w[0]=%g,w[1]=%g,w[2]=%g,w[K-1]=%g,w[K]=%g\n",
+        //Wext[0],Wext[1],Wext[2],Wext[K-1],Wext[K]);
     }
     Wext[0] = ymean;
 
