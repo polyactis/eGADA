@@ -45,10 +45,11 @@ make
 ## The C++ binary
 
 ```bash
-./src/eGADA -i ../data/input.txt -o ../data/output2.txt
+./src/eGADA -i ../data/input.txt -o ../data/output2.tsv.gz
 ```
-- The input is a single-column plain text file.
-- The output is a 4-column tsv file:
+
+- The input is a single-column plain text file. It can also read gzipped file (.gz).
+- The output is a 4-column tsv file (both .tsv and .tsv.gz are supported.):
   - Start is the starting index (1-based) of the segment.
   - Stop is the ending index (1-based and inclusive) of the segment.
   - Length is the number of data points/bins/probes included in the segment.
@@ -85,60 +86,63 @@ program name is ./eGADA.
 Usage:
 ./eGADA -i INPUTFNAME -o OUTPUTFNAME [OPTIONS]
 
-  -h [ --help ]                         produce help message
-  -T [ --TBackElim ] arg (=5)            is the backward elimination critical 
-                                        value for a breakpoint. i.e. minimum 
-                                        (mean1-mean2)/stddev difference between
-                                        two adjacent segments.
-  -a [ --aAlpha ] arg (=0.5)            is the SBL hyper prior parameter for a 
-                                        breakpoint. It is the  shape parameter 
+  -h [ --help ]                         Produce this help message.
+  -T [ --TBackElim ] arg (=5)           Minimal T-stat during the backward 
+                                        elimination of breakpoints. T-stat = 
+                                        (mean1-mean2)/stddev between two 
+                                        adjacent segments.
+  -a [ --aAlpha ] arg (=0.5)            SBL hyper prior parameter for a 
+                                        breakpoint. It is the shape parameter 
                                         of the Gamma distribution. Higher 
                                         (lower) value means less (more) 
-                                        breakpoints expected a priori.
-  -M [ --MinSegLen ] arg (=0)           is the minimum size in number of probes
-                                        for a segment to be deemed significant.
-  --BaseAmp arg (=0)                    Mean amplitude associated to the 
-                                        Neutral state. If not provided, and c 
-                                        option is used, then it is estimated as
-                                        the median value of all probes 
-                                        hybridization values after running the 
-                                        algorithm. We recomend to estimate this
-                                        on chromosomes that are known to have a
-                                        Neutral state on most areas. In some 
-                                        cases this value may be known if we 
-                                        have been applied some normalization, 
-                                        preprocessing or using another sample 
-                                        as ref.
-  -s [ --sigma2 ] arg (=-1)             Variance observed, if negative value, 
-                                        it will be estimated by the mean of the
-                                        differences. I would recommend to be 
-                                        estimated on all the chromosomes and as
-                                        a trimmed mean.
+                                        breakpoints.
+  -M [ --MinSegLen ] arg (=0)           Minimal length required for any 
+                                        segment.
+  --BaseAmp arg (=0)                    The amplitude for the copy-neutral 
+                                        state. If it is not provided, the -c 
+                                        option value is used instead and 
+                                        BaseAmp is estimated as the median 
+                                        value of probes/bins of a segment. We 
+                                        recomend to not set this value. 
+                                        Manually estimate it afterwards on 
+                                        segments that are known to be in a 
+                                        copy-neutral state.
+  -s [ --sigma2 ] arg (=-1)             Variance for each segment. If negative,
+                                        it will be estimated by the algorithm. 
+                                        We recommend it to be estimated by the 
+                                        algorithm (~ trimmed mean.
   -c [ --SelectClassifySegments ] arg (=0)
-                                        Classify segment into altered state 
-                                        (1), otherwise 0
-  --SelectEstimateBaseAmp arg (=1)      toggle this to estimate BaseAmp from 
+                                        Non-zero value to classify segment into
+                                        altered state (1) or not (0).
+  --SelectEstimateBaseAmp arg (=1)      Non-zero value to estimate BaseAmp from
                                         data, rather than user-supplied.
-  --convergenceDelta arg (=1e-08)       a delta number controlling convergence
-  --maxNoOfIterations arg (=50000)      maximum number of iterations for EM 
-                                        convergence algorithm to run before 
-                                        being stopped
+  --convergenceDelta arg (=1e-08)       A delta number controlling convergence 
+                                        in the EM algorithm
+  --maxNoOfIterations arg (=50000)      The maximum number of iterations before
+                                        the EM convergence algorithm is 
+                                        stopped.
   --convergenceMaxAlpha arg (=100000000)
-                                        one convergence related number, not 
-                                        sure what it does.
+                                        One convergence related number.
   --convergenceB arg (=9.9999999999999995e-21)
-                                        one convergence related number, not 
-                                        sure what it does
-  -b [ --debug ]                        toggle debug mode
-  -r [ --report ]                       toggle report mode
+                                        one convergence related number.
+  -b [ --debug ]                        Toggle debug/verbose mode for more 
+                                        status output
+  -r [ --report ]                       Toggle report mode
   --reportIntervalDuringBE arg (=100000)
-                                        how often to report the break point to 
-                                        be removed during backward elimination
-  -i [ --inputFname ] arg               input filename, gzipped or not. could 
-                                        be specified as option or positional 
-                                        argument.It is a single column text 
-                                        file with no header.
-  -o [ --outputFname ] arg              output filename
+                                        How often to report any break point 
+                                        removed during backward elimination.
+  -i [ --inputFname ] arg               Input file path. It could be specified 
+                                        as an option or positional argument. If
+                                        the suffix is .gz, the software will 
+                                        unzip it upon reading.It is a 
+                                        single-column text file with no header.
+  -o [ --outputFname ] arg              Output filepath. If the suffix is .gz, 
+                                        the software will zip the output 
+                                        automatically.
+
+
+Examples:
+./eGADA -i /tmp/input.tsv.gz -o /tmp/output.tsv.gz -M 1000 --convergenceDelta 0.01
 
 ```
 
