@@ -293,18 +293,16 @@ void eGADA::constructOptionDescriptionStructure()
         ("MinSegLen,M", po::value<long>(&MinSegLen)->default_value(0),
             "Minimal length required for any segment.")
         ("BaseAmp", po::value<double>(&BaseAmp)->default_value(0.0),
-            "The amplitude for the copy-neutral state. If it is not "
-            "provided, the -c option value is used instead and BaseAmp is estimated as the "
-            "median value of probes/bins of a segment. "
-            "We recomend to not set this value. Manually estimate it afterwards "
-            "on segments that are known to be in a copy-neutral state.")
+            "The amplitude for the copy-neutral state. It is used "
+            "if the -c option value is non-zero and the algorithm need to "
+            "classify segments into normal/gain/loss. ")
         ("sigma2,s", po::value<double>(&sigma2)->default_value(-1),
-            "Variance for each segment. "
+            "Variance of input data values. "
             "If negative, it will be estimated by the algorithm. "
             "We recommend it to be estimated by the algorithm (~ trimmed mean.")
         ("SelectClassifySegments,c",
             po::value<long>(&SelectClassifySegments)->default_value(0),
-            "Non-zero value to classify segment into altered state (1) or not (0).")
+            "Non-zero value to classify segments into normal/gain/loss state.")
         ("SelectEstimateBaseAmp",
             po::value<long>(&SelectEstimateBaseAmp)->default_value(1),
             "Non-zero value to estimate BaseAmp from data, rather than user-supplied.")

@@ -99,21 +99,18 @@ Usage:
   -M [ --MinSegLen ] arg (=0)           Minimal length required for any 
                                         segment.
   --BaseAmp arg (=0)                    The amplitude for the copy-neutral 
-                                        state. If it is not provided, the -c 
-                                        option value is used instead and 
-                                        BaseAmp is estimated as the median 
-                                        value of probes/bins of a segment. We 
-                                        recomend to not set this value. 
-                                        Manually estimate it afterwards on 
-                                        segments that are known to be in a 
-                                        copy-neutral state.
-  -s [ --sigma2 ] arg (=-1)             Variance for each segment. If negative,
-                                        it will be estimated by the algorithm. 
-                                        We recommend it to be estimated by the 
-                                        algorithm (~ trimmed mean.
+                                        state. It is used if the -c option 
+                                        value is non-zero and the algorithm 
+                                        need to classify segments into 
+                                        normal/gain/loss. 
+  -s [ --sigma2 ] arg (=-1)             Variance of input data values. If 
+                                        negative, it will be estimated by the 
+                                        algorithm. We recommend it to be 
+                                        estimated by the algorithm (~ trimmed 
+                                        mean.
   -c [ --SelectClassifySegments ] arg (=0)
-                                        Non-zero value to classify segment into
-                                        altered state (1) or not (0).
+                                        Non-zero value to classify segments 
+                                        into normal/gain/loss state.
   --SelectEstimateBaseAmp arg (=1)      Non-zero value to estimate BaseAmp from
                                         data, rather than user-supplied.
   --convergenceDelta arg (=1e-08)       A delta number controlling convergence 
@@ -134,7 +131,7 @@ Usage:
   -i [ --inputFname ] arg               Input file path. It could be specified 
                                         as an option or positional argument. If
                                         the suffix is .gz, the software will 
-                                        unzip it upon reading.It is a 
+                                        unzip it upon reading. It is a 
                                         single-column text file with no header.
   -o [ --outputFname ] arg              Output filepath. If the suffix is .gz, 
                                         the software will zip the output 
@@ -142,7 +139,7 @@ Usage:
 
 
 Examples:
-./eGADA -i /tmp/input.tsv.gz -o /tmp/output.tsv.gz -M 1000 --convergenceDelta 0.01
+./eGADA -i /tmp/input.tsv.gz -o /tmp/output.tsv.gz -M 10 --convergenceDelta 0.001
 
 ```
 
